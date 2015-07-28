@@ -37,15 +37,24 @@
         it.y = _y;
         it.vx = ( Math.random()-0.5 ) * 10.0;
         it.vy = -Math.random() * 10.0;
+				it.life = 1.0;
       }
 
       Patchgi.prototype.update = function(){
         var it = this;
 
-        context.drawImage( video, it.x-120, it.y-120, 240, 240 );
+        context.drawImage(
+					video,
+					it.x-120 * it.life,
+					it.y-120 * it.life,
+					240 * it.life,
+					240 * it.life
+				);
+
         it.vy += 0.1;
         it.x += it.vx;
         it.y += it.vy;
+				it.life *= 0.96;
       }
 
       function update(){
@@ -54,7 +63,11 @@
         context.fillRect( 0, 0, width, height );
 
         for( var i in patchgis ){
-          patchgis[i].update();
+					var patchgi = patchgis[i];
+          patchgi.update();
+					if( patchgi.life < 0.01 ){
+						patchgis.splice( i, 1 );
+					}
         }
         patchgis.push( new Patchgi( width/2, height/2 ) );
 
