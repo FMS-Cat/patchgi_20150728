@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<style>
+      *
+      {
+        margin : 0;
+        padding : 0;
+        overflow : hidden;
+      }
+		</style>
+	</head>
+	<body>
+		<script>
+      var video = document.createElement( 'video' );
+      video.src = 'patchgi.mp4';
+      video.autoplay = true;
+      video.loop = true;
+
+      var canvas = document.createElement( 'canvas' );
+      var width = window.innerWidth;
+      var height = window.innerHeight;
+      canvas.width = width;
+      canvas.height = height;
+      var context = canvas.getContext( '2d' );
+      document.body.appendChild( canvas );
+
+      var patchgis = [];
+
+      function Patchgi( _x, _y ){
+        var it = this;
+
+        it.x = _x;
+        it.y = _y;
+        it.vx = ( Math.random()-0.5 ) * 10.0;
+        it.vy = -Math.random() * 10.0;
+      }
+
+      Patchgi.prototype.update = function(){
+        var it = this;
+
+        context.drawImage( video, it.x-120, it.y-120, 240, 240 );
+        it.vy += 0.1;
+        it.x += it.vx;
+        it.y += it.vy;
+      }
+
+      function update(){
+        context.clearRect( 0, 0, width, height );
+        context.fillStyle = '#000000';
+        context.fillRect( 0, 0, width, height );
+
+        for( var i in patchgis ){
+          patchgis[i].update();
+        }
+        patchgis.push( new Patchgi( width/2, height/2 ) );
+
+        requestAnimationFrame( update );
+      }
+      update();
+		</script>
+	</body>
+</html>
